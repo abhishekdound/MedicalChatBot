@@ -1,6 +1,7 @@
 import os
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
+from .chunkin_helper import chunk_document
 
 
 class Embedder:
@@ -10,8 +11,9 @@ class Embedder:
         )
         self.folder_path = "vectorstore"
         self.index_name = "medical_book_index"
+        self.documents=chunk_document()
 
-    def get_retriever(self, documents):
+    def get_retriever(self):
 
         if os.path.exists(self.folder_path):
             vectorstore = FAISS.load_local(
@@ -23,7 +25,7 @@ class Embedder:
 
         else:
             vectorstore = FAISS.from_documents(
-                documents=documents,
+                documents=self.documents,
                 embedding=self.embeddings
             )
 
