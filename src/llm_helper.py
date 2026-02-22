@@ -7,6 +7,8 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 from .embedding_helper import Embedder
 
+from .web_help import Web_search
+
 
 
 
@@ -58,4 +60,8 @@ class LLM:
 
 
         response = self.rag_chain.invoke(question)
+
+        if 'i don\'t know' in response.lower():
+            web_prompt=Web_search().web_search(question)
+            response=self.llm.invoke(web_prompt).content
         return response
